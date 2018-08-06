@@ -150,6 +150,14 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
  */
 - (nullable NSURLSessionTask *)removeFromDataGroups:(nonnull NSSet<NSString *> *)dataGroups completion:(nullable SBBParticipantManagerCompletionBlock)completion;
 
+/*!
+ Update participant based on raw JSON
+ 
+ @param json an object that can be converted to json, like an NSArray or NSDictionary
+ @param completion An SBBUserManagerCompletionBlock to be called upon completion.
+ */
+- (nullable NSURLSessionTask *)updateParticipantJSONToBridge:(nonnull id)json completion:(nullable SBBParticipantManagerCompletionBlock)completion;
+
 @end
 
 @interface SBBParticipantManager : SBBBridgeAPIManager<SBBComponent, SBBParticipantManagerProtocol>

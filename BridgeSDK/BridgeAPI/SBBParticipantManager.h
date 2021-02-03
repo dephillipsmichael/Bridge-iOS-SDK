@@ -255,6 +255,16 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
  */
 - (nullable SBBReportData *)getLatestCachedDataForReport:(nonnull NSString *)identifier error:(NSError * _Nullable * _Nullable)error;
 
+/*!
+Send the File ID to Bridge API so that it can generate a pre-signed S3 url to upload file to.
+
+@param completion An SBBScheduleManagerGetCompletionBlock to be called upon completion.
+@param fileID The file ID of the file to be uploaded
+ 
+@return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+*/
+- (nullable NSURLSessionTask *)generateParticipantFileUrl:(nonnull NSString *)fileID completion:(nullable SBBParticipantManagerCompletionBlock)completion;
+
 @end
 
 /*!

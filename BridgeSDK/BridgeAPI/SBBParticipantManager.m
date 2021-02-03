@@ -40,9 +40,13 @@
 
 #define PARTICIPANT_API V3_API_PREFIX @"/participants/self"
 #define PARTICIPANT_REPORTS_FORMAT V4_API_PREFIX @"/users/self/reports/%@"
+#define PARTICIPANT_FILE_FORMAT PARTICIPANT_API @"/files/%@"
+
+// /v3/participants/self/files/<file ID>
 
 NSString * const kSBBParticipantAPI = PARTICIPANT_API;
 NSString * const kSBBParticipantReportsFormat = PARTICIPANT_REPORTS_FORMAT;
+NSString * const kSBBParticipantFileUploadFormat = PARTICIPANT_FILE_FORMAT;
 
 NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     @"no_sharing",
@@ -571,6 +575,49 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     else {
         return [results firstObject] ?: [[SBBReportData alloc] init];
     }
+}
+
+- (NSURLSessionTask *)generateParticipantFileUrl:(NSString *)fileID completion:(SBBParticipantManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSMutableDictionary *parameters = [@{} mutableCopy];
+        
+    NSString *endpoint = [NSString stringWithFormat:kSBBParticipantFileUploadFormat, fileID];
+    
+    return [self.networkManager post:endpoint headers:headers parameters:parameters background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        if (!error) {
+            NSDictionary *objectJSON = responseObject;
+//            SBBForwardCursorPagedResourceList *reportList = [self.objectManager objectFromBridgeJSON:objectJSON];
+                        
+//            if (completion) {
+//                completion(nil, error);
+//            }
+        }
+        if (completion) {
+            completion(responseObject, error);
+        }
+    }];
+}
+
+- (NSURLSessionTask *)uploadParticipantFileUrl:(NSString *)fileID file:(NSURL *)file s3UploadUrl: (NSURL *)s3UploadUrl completion:(SBBParticipantManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSMutableDictionary *parameters = [@{} mutableCopy];
+        
+    NSString *endpoint = [NSString stringWithFormat:kSBBParticipantFileUploadFormat, fileID];
+    
+    return [self.networkManager post:endpoint headers:headers parameters:parameters background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        if (!error) {
+            NSDictionary *objectJSON = responseObject;
+//            SBBForwardCursorPagedResourceList *reportList = [self.objectManager objectFromBridgeJSON:objectJSON];
+                        
+            if (completion) {
+                completion(nil, error);
+            }
+        }
+    }];
 }
 
 @end
